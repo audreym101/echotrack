@@ -390,8 +390,12 @@
         }
 
         function updateStats(donations) {
+            if (!Array.isArray(donations)) {
+                donations = [];
+            }
+            
             const totalDonations = donations.length;
-            const totalAmount = donations.reduce((sum, donation) => sum + donation.amount, 0);
+            const totalAmount = donations.reduce((sum, donation) => sum + (donation.amount || 0), 0);
             const completedDonations = donations.filter(d => d.status === 'completed').length;
             const pendingDonations = donations.filter(d => d.status === 'pending').length;
             
@@ -404,7 +408,7 @@
         function displayDonations(donations) {
             const donationsListEl = document.getElementById('donationsList');
             
-            if (donations.length === 0) {
+            if (!Array.isArray(donations) || donations.length === 0) {
                 donationsListEl.innerHTML = '<p>No donations recorded yet.</p>';
                 return;
             }
@@ -438,12 +442,12 @@
             e.preventDefault();
             
             const formData = {
-                donor: document.getElementById('donor').value,
+                donor: document.getElementById('donor').value.trim(),
                 amount: parseFloat(document.getElementById('amount').value),
                 currency: document.getElementById('currency').value,
                 paymentMethod: document.getElementById('paymentMethod').value,
-                transactionId: document.getElementById('transactionId').value,
-                message: document.getElementById('message').value
+                transactionId: document.getElementById('transactionId').value.trim(),
+                message: document.getElementById('message').value.trim()
             };
 
             try {

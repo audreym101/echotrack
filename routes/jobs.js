@@ -1,10 +1,16 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Job = require('../models/Job');
 const router = express.Router();
 
 // Create job
 router.post('/', async (req, res, next) => {
     try {
+        // Validate ObjectId format for postedBy
+        if (req.body.postedBy && !mongoose.Types.ObjectId.isValid(req.body.postedBy)) {
+            return res.status(400).json({ error: 'Invalid user ID format' });
+        }
+        
         const job = await Job.create(req.body);
         res.status(201).json(job);
     } catch (err) {

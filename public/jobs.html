@@ -286,6 +286,14 @@
     </div>
 
     <script>
+        // Helper function to escape HTML and prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         async function loadJobs() {
             const loadingEl = document.getElementById('loadingMessage');
             const errorEl = document.getElementById('errorMessage');
@@ -317,7 +325,7 @@
         function displayJobs(jobs) {
             const jobsListEl = document.getElementById('jobsList');
             
-            if (jobs.length === 0) {
+            if (!Array.isArray(jobs) || jobs.length === 0) {
                 jobsListEl.innerHTML = '<p>No jobs available at the moment.</p>';
                 return;
             }
@@ -325,21 +333,21 @@
             jobsListEl.innerHTML = jobs.map(job => `
                 <div class="job-card">
                     <div class="job-header">
-                        <h3 class="job-title">${job.title}</h3>
-                        <p class="job-company">${job.company}</p>
+                        <h3 class="job-title">${escapeHtml(job.title)}</h3>
+                        <p class="job-company">${escapeHtml(job.company)}</p>
                     </div>
                     <div class="job-details">
                         <div class="job-detail">
-                            <strong>Location:</strong> ${job.location}
+                            <strong>Location:</strong> ${escapeHtml(job.location)}
                         </div>
                         <div class="job-detail">
-                            <strong>Type:</strong> ${job.employmentType}
+                            <strong>Type:</strong> ${escapeHtml(job.employmentType)}
                         </div>
                         <div class="job-detail">
-                            <strong>Status:</strong> ${job.status}
+                            <strong>Status:</strong> ${escapeHtml(job.status)}
                         </div>
                         <div class="job-detail">
-                            <strong>Posted:</strong> ${new Date(job.createdAt).toLocaleDateString()}
+                            <strong>Posted:</strong> ${job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Unknown'}
                         </div>
                         ${job.salary && job.salary.min ? `
                         <div class="job-detail">
@@ -347,12 +355,12 @@
                         </div>
                         ` : ''}
                     </div>
-                    <p><strong>Description:</strong> ${job.description}</p>
+                    <p><strong>Description:</strong> ${escapeHtml(job.description)}</p>
                     ${job.requirements && job.requirements.length > 0 ? `
                     <div>
                         <strong>Requirements:</strong>
                         <ul>
-                            ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                            ${job.requirements.map(req => `<li>${escapeHtml(req)}</li>`).join('')}
                         </ul>
                     </div>
                     ` : ''}
@@ -364,16 +372,16 @@
             e.preventDefault();
             
             const formData = {
-                title: document.getElementById('title').value,
-                company: document.getElementById('company').value,
-                location: document.getElementById('location').value,
-                description: document.getElementById('description').value,
+                title: document.getElementById('title').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                description: document.getElementById('description').value.trim(),
                 employmentType: document.getElementById('employmentType').value,
-                postedBy: document.getElementById('postedBy').value
+                postedBy: document.getElementById('postedBy').value.trim()
             };
             
-            const salaryMin = document.getElementById('salaryMin').value;
-            const salaryMax = document.getElementById('salaryMax').value;
+            const salaryMin = document.getElementById('salaryMin').value.trim();
+            const salaryMax = document.getElementById('salaryMax').value.trim();
             
             if (salaryMin || salaryMax) {
                 formData.salary = {};

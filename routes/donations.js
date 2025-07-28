@@ -1,10 +1,21 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Donation = require('../models/Donation');
 const router = express.Router();
 
 // Create donation
 router.post('/', async (req, res, next) => {
     try {
+        // Validate ObjectId format for donor
+        if (req.body.donor && !mongoose.Types.ObjectId.isValid(req.body.donor)) {
+            return res.status(400).json({ error: 'Invalid donor ID format' });
+        }
+        
+        // Validate amount is positive
+        if (req.body.amount && req.body.amount <= 0) {
+            return res.status(400).json({ error: 'Amount must be greater than 0' });
+        }
+        
         const donation = await Donation.create(req.body);
         res.status(201).json(donation);
     } catch (err) {

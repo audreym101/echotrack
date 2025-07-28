@@ -154,6 +154,17 @@
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
 
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required minlength="6">
+
+        <label for="role">Role</label>
+        <select id="role" name="role">
+            <option value="donor">Donor</option>
+            <option value="job-seeker">Job Seeker</option>
+            <option value="ngo-admin">NGO Admin</option>
+            <option value="sys-admin">System Admin</option>
+        </select>
+
         <label for="age">Age</label>
         <input type="number" id="age" name="age" min="1">
 
@@ -168,6 +179,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Age</th>
             </tr>
         </thead>
@@ -176,33 +188,50 @@
 
     <script>
         async function loadUsers() {
+            const tableBody = document.querySelector('#usersTable tbody');
             try {
                 const response = await fetch('/api/users');
-                const users = await response.json();
-                const tableBody = document.querySelector('#usersTable tbody');
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch users');
+                }
+                
                 tableBody.innerHTML = '';
-
-                users.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.age ?? ''}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.name || 'N/A'}</td>
+                            <td>${user.email || 'N/A'}</td>
+                            <td>${user.role || 'N/A'}</td>
+                            <td>${user.age ?? ''}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="4">No users found</td></tr>';
+                }
             } catch (error) {
                 console.error('Error fetching users:', error);
+                tableBody.innerHTML = `<tr><td colspan="4" style="color: red; text-align: center;">Error loading users: ${error.message}</td></tr>`;
             }
         }
 
         document.getElementById('userForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                age: document.getElementById('age').value
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+                role: document.getElementById('role').value
             };
+            
+            const ageValue = document.getElementById('age').value.trim();
+            if (ageValue) {
+                formData.age = parseInt(ageValue);
+            }
 
             try {
                 const response = await fetch('/api/users', {

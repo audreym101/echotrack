@@ -339,7 +339,7 @@
         function displayApplications(applications) {
             const applicationsListEl = document.getElementById('applicationsList');
             
-            if (applications.length === 0) {
+            if (!Array.isArray(applications) || applications.length === 0) {
                 applicationsListEl.innerHTML = '<p>No applications submitted yet.</p>';
                 return;
             }
@@ -401,10 +401,10 @@
             e.preventDefault();
             
             const formData = {
-                job: document.getElementById('job').value,
-                applicant: document.getElementById('applicant').value,
-                coverLetter: document.getElementById('coverLetter').value,
-                resume: document.getElementById('resume').value
+                job: document.getElementById('job').value.trim(),
+                applicant: document.getElementById('applicant').value.trim(),
+                coverLetter: document.getElementById('coverLetter').value.trim(),
+                resume: document.getElementById('resume').value.trim()
             };
 
             try {

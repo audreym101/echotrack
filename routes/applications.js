@@ -1,10 +1,19 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Application = require('../models/Application');
 const router = express.Router();
 
 // Create application
 router.post('/', async (req, res, next) => {
     try {
+        // Validate ObjectId formats
+        if (req.body.job && !mongoose.Types.ObjectId.isValid(req.body.job)) {
+            return res.status(400).json({ error: 'Invalid job ID format' });
+        }
+        if (req.body.applicant && !mongoose.Types.ObjectId.isValid(req.body.applicant)) {
+            return res.status(400).json({ error: 'Invalid applicant ID format' });
+        }
+        
         const application = await Application.create(req.body);
         res.status(201).json(application);
     } catch (err) {
