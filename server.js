@@ -39,10 +39,20 @@ const connectDB = async (retryCount = 0, maxRetries = 5) => {
 // Initialize database connection
 connectDB();
 
+// Import routes
+const userRoutes = require('./routes/users');
+const jobRoutes = require('./routes/jobs');
+const donationRoutes = require('./routes/donations');
+
 // Basic route
 app.get('/', (req, res) => {
     res.sendFile('index.html', { root: './public' });
 });
+
+// API routes
+app.use('/api/users', userRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/donations', donationRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -50,6 +60,17 @@ app.get('/api/health', (req, res) => {
         status: 'ok',
         mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
     });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: err.message });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+    res.status(404).json({ error: 'Route not found' });
 });
 
 // Start server
