@@ -1,0 +1,22 @@
+{
+  "name": "echotrack-ngo-platform",
+  "description": "NGO donation and job platform",
+  "repository": "https://github.com/audreym101/echotrack.git",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "mongodb", "ngo", "donations"],
+  "env": {
+    "NODE_ENV": {
+      "description": "Environment",
+      "value": "production"
+    },
+    "MONGO_URI": {
+      "description": "MongoDB connection string",
+      "required": true
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+} 

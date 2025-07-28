@@ -135,22 +135,22 @@ function loadView(view) {
     pageTitle.textContent = titles[view] || 'Dashboard';
     
     // Load view-specific data
-    switch(view) {
+  switch(view) {
         case 'overview':
             loadOverview();
             break;
         case 'donations':
             loadDonations();
-            break;
+      break;
         case 'jobs':
             loadJobs();
-            break;
+      break;
         case 'users':
             loadUsers();
-            break;
+      break;
         case 'reports':
             loadReports();
-            break;
+      break;
     }
 }
 
