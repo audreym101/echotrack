@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate Items</title>
+  <link rel="stylesheet" href="donate.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Donate Textile Items</h2>
+    <form id="donationForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="text" id="item" placeholder="Item to Donate" required />
+      <textarea id="description" placeholder="Description of Item" rows="4"></textarea>
+      <button type="submit">Submit Donation</button>
+    </form>
+    <p id="donationResult"></p>
+  </div>
+  <script src="donate.js"></script>
+</body>
+</html>
