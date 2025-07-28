@@ -23,9 +23,10 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     }
 
     // Save token and redirect to dashboard
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("token", data.user.id);
+    localStorage.setItem("userData", JSON.stringify(data.user));
     alert("Login successful!");
-    window.location.href = "dashboard.html"; // Change to your dashboard page
+    window.location.href = "dashboard.html";
   } catch (error) {
     console.error("Error logging in:", error);
     alert("Something went wrong. Try again later.");

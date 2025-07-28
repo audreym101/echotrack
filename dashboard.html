@@ -1,32 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoTrack - NGO Platform Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="dashboard">
-    <header>
-      <h1>Welcome to the Dashboard</h1>
-    </header>
-    <div class="main">
-      <aside>
-        <nav>
-          <ul>
-            <li><a href="#" onclick="loadView('admin')">System Admin</a></li>
-            <li><a href="#" onclick="loadView('donor')">Donor</a></li>
-            <li><a href="#" onclick="loadView('ngo')">NGO Admin</a></li>
-            <li><a href="#" onclick="loadView('job')">Job Seeker</a></li>
-          </ul>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-heart"></i> EchoTrack</h2>
+                <p class="user-info" id="userInfo">Loading...</p>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" data-view="overview">
+                    <a href="#"><i class="fas fa-tachometer-alt"></i> Overview</a>
+                </li>
+                <li class="nav-item" data-view="donations">
+                    <a href="#"><i class="fas fa-hand-holding-heart"></i> Donations</a>
+                </li>
+                <li class="nav-item" data-view="jobs">
+                    <a href="#"><i class="fas fa-briefcase"></i> Jobs</a>
+                </li>
+                <li class="nav-item" data-view="users">
+                    <a href="#"><i class="fas fa-users"></i> Users</a>
+                </li>
+                <li class="nav-item" data-view="reports">
+                    <a href="#"><i class="fas fa-chart-bar"></i> Reports</a>
+                </li>
+                <li class="nav-item" data-view="settings">
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </nav>
-      </aside>
-      <section id="content">
-        <p>Select a role to view your dashboard.</p>
-      </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">Dashboard Overview</h1>
+                </div>
+                <div class="header-right">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img">
+                        <span id="userName">User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading...</p>
+                </div>
+
+                <!-- Overview Dashboard -->
+                <div id="overview" class="dashboard-view active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-hand-holding-heart"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalDonations">0</h3>
+                                <p>Total Donations</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="activeJobs">0</h3>
+                                <p>Active Jobs</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalUsers">0</h3>
+                                <p>Registered Users</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalAmount">$0</h3>
+                                <p>Total Amount</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="recent-donations">
+                            <h3><i class="fas fa-clock"></i> Recent Donations</h3>
+                            <div id="recentDonationsList" class="list-container">
+                                <p>Loading donations...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-jobs">
+                            <h3><i class="fas fa-briefcase"></i> Recent Job Postings</h3>
+                            <div id="recentJobsList" class="list-container">
+                                <p>Loading jobs...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donations View -->
+                <div id="donations" class="dashboard-view">
+                    <div class="view-header">
+                        <h2>Donations Management</h2>
+                        <button class="btn-primary" onclick="showDonationModal()">
+                            <i class="fas fa-plus"></i> New Donation
+                        </button>
+                    </div>
+                    <div id="donationsList" class="data-table-container">
+                        <p>Loading donations...</p>
+                    </div>
+                </div>
+
+                <!-- Jobs View -->
+                <div id="jobs" class="dashboard-view">
+                    <div class="view-header">
+                        <h2>Jobs Management</h2>
+                        <button class="btn-primary" onclick="showJobModal()">
+                            <i class="fas fa-plus"></i> Post New Job
+                        </button>
+                    </div>
+                    <div id="jobsList" class="data-table-container">
+                        <p>Loading jobs...</p>
+                    </div>
+                </div>
+
+                <!-- Users View -->
+                <div id="users" class="dashboard-view">
+                    <div class="view-header">
+                        <h2>User Management</h2>
+                        <button class="btn-primary" onclick="showUserModal()">
+                            <i class="fas fa-plus"></i> Add User
+                        </button>
+                    </div>
+                    <div id="usersList" class="data-table-container">
+                        <p>Loading users...</p>
+                    </div>
+                </div>
+
+                <!-- Reports View -->
+                <div id="reports" class="dashboard-view">
+                    <h2>Reports & Analytics</h2>
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Donation Trends</h3>
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Chart will be displayed here</p>
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Job Applications</h3>
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-pie"></i>
+                                <p>Chart will be displayed here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="settings" class="dashboard-view">
+                    <h2>Settings</h2>
+                    <div class="settings-grid">
+                        <div class="setting-card">
+                            <h3>Profile Settings</h3>
+                            <form id="profileForm">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" id="profileName" placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="profileEmail" placeholder="Your email">
+                                </div>
+                                <button type="submit" class="btn-primary">Update Profile</button>
+                            </form>
+                        </div>
+                        <div class="setting-card">
+                            <h3>Change Password</h3>
+                            <form id="passwordForm">
+                                <div class="form-group">
+                                    <label>Current Password</label>
+                                    <input type="password" id="currentPassword" placeholder="Current password">
+                                </div>
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" id="newPassword" placeholder="New password">
+                                </div>
+                                <button type="submit" class="btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
-  <script src="dashboard.js"></script>
+
+    <!-- Modals -->
+    <div id="donationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('donationModal')">&times;</span>
+            <h2>New Donation</h2>
+            <form id="donationForm">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="donationAmount" placeholder="Enter amount" required>
+                </div>
+                <div class="form-group">
+                    <label>Currency</label>
+                    <select id="donationCurrency" required>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="donationDescription" placeholder="Donation description"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Submit Donation</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('jobModal')">&times;</span>
+            <h2>Post New Job</h2>
+            <form id="jobForm">
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="jobTitle" placeholder="Enter job title" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="jobDescription" placeholder="Job description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Salary Range</label>
+                    <input type="text" id="jobSalary" placeholder="e.g., $30,000 - $50,000">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="jobLocation" placeholder="Job location">
+                </div>
+                <button type="submit" class="btn-primary">Post Job</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('userModal')">&times;</span>
+            <h2>Add New User</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="userNameInput" placeholder="Enter name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmailInput" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="userPasswordInput" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="userRoleInput" required>
+                        <option value="donor">Donor</option>
+                        <option value="jobseeker">Job Seeker</option>
+                        <option value="ngo">NGO Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Add User</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
 </body>
 </html>
