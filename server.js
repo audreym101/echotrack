@@ -5,7 +5,9 @@ const cors = require('cors');
 const path = require('path');
 
 // Import routes
-const usersRouter = require('./routes/users');
+const userRoutes = require('./routes/users');
+const jobRoutes = require('./routes/jobs');
+const donationRoutes = require('./routes/donations');
 
 const app = express();
 
@@ -34,10 +36,17 @@ const connectDB = async (retryCount = 0, maxRetries = 5) => {
 // Initialize database connection
 connectDB();
 
-// Routes
-app.use('/api/users', usersRouter);
+// Basic route
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: './public' });
+});
 
-// Health check endpoint
+// API routes
+app.use('/api/users', userRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/donations', donationRoutes);
+
+// Health check route
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
@@ -57,6 +66,12 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message || 'Internal server error' });
 });
 
+// 404 handler
+app.use('*', (req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
