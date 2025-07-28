@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - Donations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Navigation styles */
+        .navbar {
+            background-color: #2e7d32;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0 10px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: #388e3c;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2 {
+            color: #2e7d32;
+        }
+        
+        .donation-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .donation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .donation-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .donation-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-refunded {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .donation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .donation-detail {
+            padding: 5px 0;
+        }
+        
+        .donation-detail strong {
+            color: #2e7d32;
+        }
+        
+        .btn {
+            background-color: #43a047;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .btn-secondary {
+            background-color: #757575;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #616161;
+        }
+        
+        .add-donation-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .donation-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">EcoTrack</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/users.html">Users</a></li>
+                <li><a href="/jobs.html">Jobs</a></li>
+                <li><a href="/applications.html">Applications</a></li>
+                <li><a href="/donations.html" class="active">Donations</a></li>
+                <li><a href="/api/health" target="_blank">API Health</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Donation Management</h1>
+
+        <!-- Donation Statistics -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-value" id="totalDonations">0</div>
+                <div class="stat-label">Total Donations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalAmount">$0</div>
+                <div class="stat-label">Total Amount</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completedDonations">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingDonations">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+
+        <!-- Add Donation Form -->
+        <div class="add-donation-form">
+            <h2>Record New Donation</h2>
+            <form id="donationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="donor">Donor (User ID)</label>
+                        <input type="text" id="donor" name="donor" required placeholder="Enter donor user ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" name="amount" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" name="currency">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="KES">KES (KSh)</option>
+                            <option value="NGN">NGN (₦)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="crypto">Cryptocurrency</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transactionId">Transaction ID</label>
+                    <input type="text" id="transactionId" name="transactionId" required placeholder="Enter unique transaction ID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message (Optional)</label>
+                    <textarea id="message" name="message" placeholder="Any message from the donor"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Record Donation</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('donationForm').reset()">Clear Form</button>
+            </form>
+        </div>
+
+        <!-- Donations List -->
+        <div class="donations-section">
+            <h2>Recent Donations</h2>
+            <button class="btn" onclick="loadDonations()">Refresh Donations</button>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="loadingMessage" class="loading" style="display: none;">Loading donations...</div>
+            <div id="donationsList"></div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDonations() {
+            const loadingEl = document.getElementById('loadingMessage');
+            const errorEl = document.getElementById('errorMessage');
+            const donationsListEl = document.getElementById('donationsList');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/donations');
+                const donations = await response.json();
+                
+                loadingEl.style.display = 'none';
+                
+                if (response.ok) {
+                    displayDonations(donations);
+                    updateStats(donations);
+                } else {
+                    throw new Error(donations.error || 'Failed to load donations');
+                }
+            } catch (error) {
+                console.error('Error fetching donations:', error);
+                loadingEl.style.display = 'none';
+                errorEl.textContent = `Error loading donations: ${error.message}`;
+                errorEl.style.display = 'block';
+                donationsListEl.innerHTML = '';
+            }
+        }
+
+        function updateStats(donations) {
+            const totalDonations = donations.length;
+            const totalAmount = donations.reduce((sum, donation) => sum + donation.amount, 0);
+            const completedDonations = donations.filter(d => d.status === 'completed').length;
+            const pendingDonations = donations.filter(d => d.status === 'pending').length;
+            
+            document.getElementById('totalDonations').textContent = totalDonations;
+            document.getElementById('totalAmount').textContent = `$${totalAmount.toFixed(2)}`;
+            document.getElementById('completedDonations').textContent = completedDonations;
+            document.getElementById('pendingDonations').textContent = pendingDonations;
+        }
+
+        function displayDonations(donations) {
+            const donationsListEl = document.getElementById('donationsList');
+            
+            if (donations.length === 0) {
+                donationsListEl.innerHTML = '<p>No donations recorded yet.</p>';
+                return;
+            }
+            
+            donationsListEl.innerHTML = donations.map(donation => `
+                <div class="donation-card">
+                    <div class="donation-header">
+                        <div class="donation-amount">${donation.currency} ${donation.amount.toFixed(2)}</div>
+                        <div class="donation-status status-${donation.status}">${donation.status}</div>
+                    </div>
+                    <div class="donation-details">
+                        <div class="donation-detail">
+                            <strong>Transaction ID:</strong> ${donation.transactionId}
+                        </div>
+                        <div class="donation-detail">
+                            <strong>Payment Method:</strong> ${donation.paymentMethod.replace('_', ' ')}
+                        </div>
+                        <div class="donation-detail">
+                            <strong>Date:</strong> ${new Date(donation.createdAt).toLocaleDateString()}
+                        </div>
+                        <div class="donation-detail">
+                            <strong>Donor ID:</strong> ${donation.donor}
+                        </div>
+                    </div>
+                    ${donation.message ? `<p><strong>Message:</strong> ${donation.message}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('donationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                donor: document.getElementById('donor').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                currency: document.getElementById('currency').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                transactionId: document.getElementById('transactionId').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/donations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Donation recorded successfully!');
+                    e.target.reset();
+                    loadDonations();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.error || 'Failed to record donation'));
+                }
+            } catch (error) {
+                console.error('Error recording donation:', error);
+                alert('Could not record donation. Please try again.');
+            }
+        });
+
+        // Load donations on page load
+        loadDonations();
+    </script>
+</body>
+</html>

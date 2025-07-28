@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - Jobs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Navigation styles */
+        .navbar {
+            background-color: #2e7d32;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0 10px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: #388e3c;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2 {
+            color: #2e7d32;
+        }
+        
+        .job-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .job-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .job-title {
+            color: #2e7d32;
+            margin: 0 0 5px 0;
+        }
+        
+        .job-company {
+            color: #666;
+            margin: 0;
+        }
+        
+        .job-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .job-detail {
+            padding: 5px 0;
+        }
+        
+        .job-detail strong {
+            color: #2e7d32;
+        }
+        
+        .btn {
+            background-color: #43a047;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .btn-secondary {
+            background-color: #757575;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #616161;
+        }
+        
+        .add-job-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            padding: 10px;
+            background-color: #ffebee;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">EcoTrack</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/users.html">Users</a></li>
+                <li><a href="/jobs.html" class="active">Jobs</a></li>
+                <li><a href="/applications.html">Applications</a></li>
+                <li><a href="/donations.html">Donations</a></li>
+                <li><a href="/api/health" target="_blank">API Health</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Job Management</h1>
+
+        <!-- Add Job Form -->
+        <div class="add-job-form">
+            <h2>Post New Job</h2>
+            <form id="jobForm">
+                <div class="form-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Job Description</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="employmentType">Employment Type</label>
+                        <select id="employmentType" name="employmentType">
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="contract">Contract</option>
+                            <option value="internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="postedBy">Posted By (User ID)</label>
+                        <input type="text" id="postedBy" name="postedBy" required placeholder="Enter user ID">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salaryMin">Minimum Salary</label>
+                        <input type="number" id="salaryMin" name="salaryMin" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryMax">Maximum Salary</label>
+                        <input type="number" id="salaryMax" name="salaryMax" min="0">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Post Job</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('jobForm').reset()">Clear Form</button>
+            </form>
+        </div>
+
+        <!-- Jobs List -->
+        <div class="jobs-section">
+            <h2>Active Job Listings</h2>
+            <button class="btn" onclick="loadJobs()">Refresh Jobs</button>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="loadingMessage" class="loading" style="display: none;">Loading jobs...</div>
+            <div id="jobsList"></div>
+        </div>
+    </div>
+
+    <script>
+        async function loadJobs() {
+            const loadingEl = document.getElementById('loadingMessage');
+            const errorEl = document.getElementById('errorMessage');
+            const jobsListEl = document.getElementById('jobsList');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/jobs');
+                const jobs = await response.json();
+                
+                loadingEl.style.display = 'none';
+                
+                if (response.ok) {
+                    displayJobs(jobs);
+                } else {
+                    throw new Error(jobs.error || 'Failed to load jobs');
+                }
+            } catch (error) {
+                console.error('Error fetching jobs:', error);
+                loadingEl.style.display = 'none';
+                errorEl.textContent = `Error loading jobs: ${error.message}`;
+                errorEl.style.display = 'block';
+                jobsListEl.innerHTML = '';
+            }
+        }
+
+        function displayJobs(jobs) {
+            const jobsListEl = document.getElementById('jobsList');
+            
+            if (jobs.length === 0) {
+                jobsListEl.innerHTML = '<p>No jobs available at the moment.</p>';
+                return;
+            }
+            
+            jobsListEl.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-header">
+                        <h3 class="job-title">${job.title}</h3>
+                        <p class="job-company">${job.company}</p>
+                    </div>
+                    <div class="job-details">
+                        <div class="job-detail">
+                            <strong>Location:</strong> ${job.location}
+                        </div>
+                        <div class="job-detail">
+                            <strong>Type:</strong> ${job.employmentType}
+                        </div>
+                        <div class="job-detail">
+                            <strong>Status:</strong> ${job.status}
+                        </div>
+                        <div class="job-detail">
+                            <strong>Posted:</strong> ${new Date(job.createdAt).toLocaleDateString()}
+                        </div>
+                        ${job.salary && job.salary.min ? `
+                        <div class="job-detail">
+                            <strong>Salary:</strong> $${job.salary.min}${job.salary.max ? ` - $${job.salary.max}` : '+'}
+                        </div>
+                        ` : ''}
+                    </div>
+                    <p><strong>Description:</strong> ${job.description}</p>
+                    ${job.requirements && job.requirements.length > 0 ? `
+                    <div>
+                        <strong>Requirements:</strong>
+                        <ul>
+                            ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('title').value,
+                company: document.getElementById('company').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value,
+                employmentType: document.getElementById('employmentType').value,
+                postedBy: document.getElementById('postedBy').value
+            };
+            
+            const salaryMin = document.getElementById('salaryMin').value;
+            const salaryMax = document.getElementById('salaryMax').value;
+            
+            if (salaryMin || salaryMax) {
+                formData.salary = {};
+                if (salaryMin) formData.salary.min = parseInt(salaryMin);
+                if (salaryMax) formData.salary.max = parseInt(salaryMax);
+            }
+
+            try {
+                const response = await fetch('/api/jobs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Job posted successfully!');
+                    e.target.reset();
+                    loadJobs();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.error || 'Failed to post job'));
+                }
+            } catch (error) {
+                console.error('Error posting job:', error);
+                alert('Could not post job. Please try again.');
+            }
+        });
+
+        // Load jobs on page load
+        loadJobs();
+    </script>
+</body>
+</html>

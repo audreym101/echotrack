@@ -43,6 +43,7 @@ connectDB();
 const userRoutes = require('./routes/users');
 const jobRoutes = require('./routes/jobs');
 const donationRoutes = require('./routes/donations');
+const applicationRoutes = require('./routes/applications');
 
 // Basic route
 app.get('/', (req, res) => {
@@ -53,6 +54,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/donations', donationRoutes);
+app.use('/api/applications', applicationRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

@@ -63,10 +63,87 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        
+        /* Navigation styles */
+        .navbar {
+            background-color: #2e7d32;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0 10px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: #388e3c;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Registered Users</h1>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">EcoTrack</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/users.html" class="active">Users</a></li>
+                <li><a href="/jobs.html">Jobs</a></li>
+                <li><a href="/applications.html">Applications</a></li>
+                <li><a href="/donations.html">Donations</a></li>
+                <li><a href="/api/health" target="_blank">API Health</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Registered Users</h1>
 
     <!-- Form to Add User -->
     <h2>Add New User</h2>
@@ -151,5 +228,6 @@
         // Load users on page load
         loadUsers();
     </script>
+    </div>
 </body>
 </html>
