@@ -1,0 +1,20 @@
+### Test Server Root
+GET http://localhost:5000/
+
+### Test MongoDB Connection
+GET http://localhost:5000/api/health
+
+### Create User with Role
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "name": "Audrey",
+    "email": "audrey@example.com",
+    "password": "securepassword123",
+    "role": "jobseeker",
+    "age": 24
+}
+
+### Get Users
+GET http://localhost:5000/api/users
