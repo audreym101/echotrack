@@ -4,20 +4,15 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 
+// Import routes
+const usersRouter = require('./routes/users');
+
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Serve static files from public directory
-app.use(express.static('public'));
-
-// Verify MongoDB URI
-if (!process.env.MONGO_URI) {
-    console.error('❌ MONGO_URI is not defined in .env file');
-    process.exit(1);
-}
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB connection with retry logic
 const connectDB = async (retryCount = 0, maxRetries = 5) => {
@@ -39,12 +34,10 @@ const connectDB = async (retryCount = 0, maxRetries = 5) => {
 // Initialize database connection
 connectDB();
 
-// Basic route
-app.get('/', (req, res) => {
-    res.sendFile('index.html', { root: './public' });
-});
+// Routes
+app.use('/api/users', usersRouter);
 
-// Health check route
+// Health check endpoint
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
@@ -52,7 +45,18 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Start server
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('❌ Error:', err);
+    if (err.code === 11000) {
+        return res.status(409).json({ 
+            error: 'Duplicate key error', 
+            field: Object.keys(err.keyPattern)[0] 
+        });
+    }
+    res.status(500).json({ error: err.message || 'Internal server error' });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
