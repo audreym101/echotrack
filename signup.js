@@ -1,4 +1,4 @@
-document.getElementById("signupForm").addEventListener("submit", function (e) {
+document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const name = document.getElementById("name").value.trim();
@@ -10,20 +10,16 @@ document.getElementById("signupForm").addEventListener("submit", function (e) {
     return;
   }
 
-  // Create user account
   try {
-    const response = await fetch("http://localhost:5000/api/users", {
+    const response = await fetch("/api/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role: "donor" })
+      body: JSON.stringify({ name, email, password })
     });
 
     if (response.ok) {
-      const userData = await response.json();
-      localStorage.setItem("token", userData._id);
-      localStorage.setItem("userData", JSON.stringify(userData));
-      alert(`Account created successfully for ${name}!`);
-      window.location.href = "dashboard.html";
+      alert(`Account created successfully for ${name}! Please login.`);
+      window.location.href = "login.html";
     } else {
       const error = await response.json();
       alert(error.message || "Failed to create account");

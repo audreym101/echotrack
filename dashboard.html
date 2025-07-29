@@ -313,6 +313,11 @@
     </div>
   </div>
 
+  <script>
+  if (!localStorage.getItem('token')) {
+    window.location.href = 'login.html';
+  }
+</script>
   <script src="dashboard.js"></script>
 </body>
 </html>

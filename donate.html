@@ -18,6 +18,11 @@
     </form>
     <p id="donationResult"></p>
   </div>
+  <script>
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+  </script>
   <script src="donate.js"></script>
 </body>
 </html>

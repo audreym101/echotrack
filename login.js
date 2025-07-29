@@ -10,7 +10,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/users/login", {
+    const res = await fetch("/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -22,8 +22,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
       return;
     }
 
-    // Save token and redirect to dashboard
-    localStorage.setItem("token", data.user.id);
+    // Save JWT token and user info
+    localStorage.setItem("token", data.token);
     localStorage.setItem("userData", JSON.stringify(data.user));
     alert("Login successful!");
     window.location.href = "dashboard.html";
