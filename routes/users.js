@@ -57,8 +57,8 @@ router.post('/login', async (req, res) => {
             console.log(`❌ Login failed: No user for email ${email}`);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
+        // Plain string comparison for password
+        if (user.password !== password) {
             console.log(`❌ Login failed: Wrong password for ${email}`);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
