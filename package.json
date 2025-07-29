@@ -10,10 +10,18 @@
     "build": "echo 'No build step required'",
     "deploy": "bash deploy.sh"
   },
-  "keywords": ["ngo", "donations", "jobs", "platform"],
+  "keywords": [
+    "ngo",
+    "donations",
+    "jobs",
+    "platform"
+  ],
   "author": "EchoTrack Team",
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
   }
 }
