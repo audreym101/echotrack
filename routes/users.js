@@ -34,11 +34,16 @@ router.post('/signup', async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
         const existing = await User.findOne({ email });
-        if (existing) return res.status(409).json({ message: 'Email already registered' });
+        if (existing) {
+            console.log(`❌ Signup failed: Email already registered (${email})`);
+            return res.status(409).json({ message: 'Email already registered' });
+        }
         const user = new User({ name, email, password, role });
         await user.save();
-        res.status(201).json({ message: 'User registered' });
+        console.log(`✅ Signup success: ${email} (${role})`);
+        res.status(201).json({ message: 'User registered', user: { id: user._id, name: user.name, email: user.email, role: user.role } });
     } catch (err) {
+        console.error('❌ Signup error:', err.message);
         res.status(400).json({ message: err.message });
     }
 });
@@ -48,12 +53,20 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+        if (!user) {
+            console.log(`❌ Login failed: No user for email ${email}`);
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
         const isMatch = await user.comparePassword(password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+        if (!isMatch) {
+            console.log(`❌ Login failed: Wrong password for ${email}`);
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
         const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
-        res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+        console.log(`✅ Login success: ${email} (${user.role})`);
+        res.json({ message: 'Login successful', token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
     } catch (err) {
+        console.error('❌ Login error:', err.message);
         res.status(500).json({ message: err.message });
     }
 });

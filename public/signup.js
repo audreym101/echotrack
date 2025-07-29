@@ -4,6 +4,7 @@ document.getElementById("signupForm").addEventListener("submit", async function 
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
+  const role = document.getElementById("role").value;
 
   if (!name || !email || !password) {
     alert("Please fill in all fields.");
@@ -14,7 +15,7 @@ document.getElementById("signupForm").addEventListener("submit", async function 
     const response = await fetch("/api/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email, password, role })
     });
 
     if (response.ok) {
