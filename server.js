@@ -8,6 +8,7 @@ const path = require('path');
 const userRoutes = require('./routes/users');
 const jobRoutes = require('./routes/jobs');
 const donationRoutes = require('./routes/donations');
+const auth = require('./middleware/auth');
 
 const app = express();
 
@@ -42,7 +43,11 @@ app.get('/', (req, res) => {
 });
 
 // API routes
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); // keep for signup/login
+// Protect GET /api/users to only allow authenticated users
+app.get('/api/users/me', auth, (req, res) => {
+  res.json({ userId: req.user.userId, email: req.user.email, role: req.user.role });
+});
 app.use('/api/jobs', jobRoutes);
 app.use('/api/donations', donationRoutes);
 

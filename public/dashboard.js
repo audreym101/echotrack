@@ -63,23 +63,23 @@ function setupEventListeners() {
 async function loadUserData() {
     try {
         showLoading();
-        const response = await fetch(`${API_BASE_URL}/users`, {
+        const response = await fetch(`${API_BASE_URL}/users/me`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        
         if (response.ok) {
-            const users = await response.json();
-            // For demo purposes, use the first user
-            if (users.length > 0) {
-                currentUser = users[0];
-                updateUserInterface();
-            }
+            const user = await response.json();
+            currentUser = user;
+            updateUserInterface();
+        } else {
+            // Token invalid or expired, force logout
+            logout();
         }
     } catch (error) {
         console.error('Error loading user data:', error);
         showNotification('Error loading user data', 'error');
+        logout();
     } finally {
         hideLoading();
     }
