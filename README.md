@@ -4,7 +4,7 @@ Echotrack is a web platform built to help NGOs post job opportunities and receiv
 
 ## 🌍 Live Demo
 
-🔗 [https://echotrack-5.onrender.com/signup.html]  and my DEMO video [https://vimeo.com/1106042489?share=copy]
+🔗 [https://echotrack-5.onrender.com/signup.html]  and my DEMO video [https://vimeo.com/1106042489?share=copy] and my SRS PROJECT [https://docs.google.com/document/d/1chs6bI9hB0ySMvDJS5yKe1meMqmS--wzWIBxQzCgC9o/edit?usp=sharing]
 
 ---
 
