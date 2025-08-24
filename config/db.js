@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const connectDB = async () => {
   try {
     console.log('Connecting to MongoDB...');
@@ -12,3 +13,5 @@ const connectDB = async () => {
     // don't exit in production; log and let host restart if needed
   }
 };
+
+module.exports = connectDB;
